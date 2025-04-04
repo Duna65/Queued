@@ -1,43 +1,43 @@
 package sd2;
 import java.util.Scanner;//imports
-public class Queued {
-    class Person {
-        String name;
-        int age;
+class Person {
+    String name;
+    int age;
 
-        Person(String name, int age) {
-            this.name = name;
-            this.age = age;
-        }
+    Person(String name, int age) {
+        this.name = name;
+        this.age = age;
     }
+}
+public class Queued {
     public Queued next; //variables
     public Queued prev; //uses the previous and next objects as variables
     public Queued head;
     public Queued tail;
     public Object data;
 
-    public Queued(Object data, Queued next, Queued prev) {
-        head=new Queued(data, next, prev);
-        tail=head;
+    public Queued(Person data, Queued next, Queued prev) {
+        if (head == null) {
+            head = this;//Initialize head if it's null
+        }
+        if (tail == null) {
+            tail = this;//Initialize tail if it's null
+        }
         this.data = data;
         this.next = next;
         this.prev = prev; 
     }
-    public void addNode(Object data){
-
+    public void addNode(Person data){//adds a node to the queue 
         Queued current = new Queued(data, next, prev);
-
+        if (head == null) {
+            head = current; 
+        }
         current.prev=tail;
-
         tail.next=current;
-
    }
-   public Object removeNode(Queued cur){
-
+   public Object removeNode(Queued cur){//removes a node from the quue
         cur.next.setPrevious(cur.prev);
-
         return data;
-
    }
     public void setNext(Queued next){
             this.next=next;
@@ -51,32 +51,28 @@ public class Queued {
     public Queued getPrevious(){
             return prev;
         }
-    public void setData(Object data){
-              this.data=data;
-            }
-        public Object getData(){
+    public void setData(Person data){
+            this.data=data;
+        }
+    public Object getData(){
             return data;
         }    
-    
     public static void main(String[] args){
-        Queued queue;
-        Scanner test = new Scanner(System.in);//asks you if you want to use the automatic data set
-        System.out.println("Use automatic information? \"y\" for yes, and \"n\" for no");
-        String yesorno = test.nextLine();
+        Queued queue = null;//initialization of queue
+        Scanner in = new Scanner(System.in);//makes a scanner
+        System.out.println("How many people do you want to add to the list?");
+        int nump = in.nextInt(); // Get the number of people
+        in.nextLine(); // Consume the newline character
         
-    if(true==yesorno.contains("n")){//tests if you entered yes or no, and if no, it makes new data
-          Scanner in = new Scanner(System.in);//user input
-          for(int i=1;i<=5;i++){
+        for (int i = 0; i < nump; i++) {
             String nam = "";//name to be submitted
-            System.out.println("put info for person " + i);//puts in data for 5 people
-            if (i!=1){//skips a line cuz a bug happens if I don't
-                in.nextLine();
-            }
-            System.out.println("First, put in your first AND last name");
+            System.out.println("put info for person " + (i+1));//puts in data for 5 people
+            System.out.println("First, put in your name");
             String a = in.nextLine();
             System.out.println("Second, put in your age");
-            int b = in.nextInt();
-            String[] name = {};//splits your names on any of the characters
+            int age = in.nextInt();
+            in.nextLine();//consumes a line
+            String[] name = {"@","@"};//splits your names on any of the characters
             if (a.contains(";")==true) {
                 name = a.split(";");//splits the user's name at the character that it uses
             } else if(a.contains("-")==true){
@@ -90,23 +86,27 @@ public class Queued {
             } else if(a.contains(".")==true){
                 name = a.split(".");
             }
-            try {
-                if (name[1].isEmpty() == false) {//split first and last names
+                if (name[1].contains("@") == false) {//split first and last names
                     nam = name[0]+" "+name[1];
+                } else{
+                    nam = a;
+                }
+            Person person = new Person(nam, age);//creates a new Person object
+            if (queue == null) {
+                queue = new Queued(person, null, null);//start the queue
+            } else {
+                queue.addNode(person);//adds the person to the queue
             }
-            } catch (Exception ex) {
-                System.out.println("Please put in your name right!");//if the name is wrong
-            }
-            Person persn = new Person(nam, b);
-            queue.addNode(person)
       name[0]="";
       name[1]="";//clears name for the next input
     }
-    in.close();  //close
-    test.close();
-        } else{
-
-        }
+    in.close();  //closes the scanner
+    Queued current = queue; //shows the queue
+    for (;current != null;) {
+        Person p = (Person) current.getData();//gets the data for the person
+        System.out.println("Name: " + p.name + ", Age: " + p.age);
+        current = current.getNext(); // Move to the next node
+    }
 
     }
 }
